@@ -1,4 +1,4 @@
-package men.brakh.agario.model;
+package men.brakh.agario.model.message;
 
 import men.brakh.agario.model.enums.ChangingType;
 

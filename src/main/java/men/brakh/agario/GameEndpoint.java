@@ -1,8 +1,8 @@
 package men.brakh.agario;
 
-import men.brakh.agario.model.Message;
-import men.brakh.agario.model.MessageDecoder;
-import men.brakh.agario.model.MessageEncoder;
+import men.brakh.agario.model.message.Message;
+import men.brakh.agario.model.message.MessageDecoder;
+import men.brakh.agario.model.message.MessageEncoder;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;

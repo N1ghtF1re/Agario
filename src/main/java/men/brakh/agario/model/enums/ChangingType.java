@@ -1,4 +1,6 @@
 package men.brakh.agario.model.enums;
 
-public class ChangingType {
+public enum ChangingType {
+    SPAWN,
+
 }

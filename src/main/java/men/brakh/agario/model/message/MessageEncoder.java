@@ -1,4 +1,4 @@
-package men.brakh.agario.model;
+package men.brakh.agario.model.message;
 
 import com.google.gson.Gson;
 
