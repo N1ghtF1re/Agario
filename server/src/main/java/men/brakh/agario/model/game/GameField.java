@@ -93,7 +93,8 @@ public class GameField {
                 .build();
 
         persons.put(communicator, person);
-        broadcast(new Message(ChangingType.SPAWN, person));
+        communicator.send(new Message(ChangingType.MY_SPAWN, person));
+        broadcast(new Message(ChangingType.SPAWN, person), person);
 
         persons.forEach(
                 (otherCommunicator, otherPerson) -> {
@@ -169,6 +170,13 @@ public class GameField {
         broadcast(new Message(ChangingType.COORDS_CHANGING, person));
     }
 
+    public void kill(Communicator communicator) {
+        Person person = persons.get(communicator);
+        persons.remove(communicator);
+
+        broadcast(new Message(ChangingType.DEAD, person));
+    }
+
     /**
      * Отправка уведомления всем пользователям
      * @param message Объект сообщения
@@ -177,6 +185,15 @@ public class GameField {
         persons.forEach(
                 (communicator, person) -> {
                     communicator.send(message);
+                }
+        );
+    }
+
+    private void broadcast(Message message, Person excludePerson) {
+        persons.forEach(
+                (communicator, person) -> {
+                    if(!person.equals(excludePerson))
+                        communicator.send(message);
                 }
         );
     }

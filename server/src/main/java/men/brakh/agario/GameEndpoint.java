@@ -2,7 +2,6 @@ package men.brakh.agario;
 
 import men.brakh.agario.model.communicator.Communicator;
 import men.brakh.agario.model.communicator.SessionCommunicator;
-import men.brakh.agario.model.enums.ChangingType;
 import men.brakh.agario.model.game.GameField;
 import men.brakh.agario.model.message.Message;
 import men.brakh.agario.model.message.MessageDecoder;
@@ -47,13 +46,7 @@ public class GameEndpoint {
 
     @OnClose
     public void onClose(Session session) throws IOException {
-        /*
-        chatEndpoints.remove(this);
-        Message message = new Message();
-        message.setFrom(users.get(session.getId()));
-        message.setContent("Disconnected!");
-        broadcast(message);
-        */
+        gameField.kill(communicator);
     }
 
     @OnError
