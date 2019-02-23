@@ -9,7 +9,9 @@ const SPEED = 2
 
 // VARS
 
-let socket = new WebSocket("ws://localhost:8080/agario/kek");
+let username = prompt("Enter username")
+let socket = new WebSocket("ws://localhost:8080/agario/" + username);
+
 socket.onmessage = onMessage;
 
 let field = document.getElementById("game-field")
