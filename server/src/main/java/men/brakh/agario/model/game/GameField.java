@@ -8,11 +8,12 @@ import men.brakh.agario.model.enums.ChangingType;
 import men.brakh.agario.model.message.Message;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GameField {
     private GameConfig config = GameConfig.getInstance();
 
-    private Map<Communicator, Person> persons = new HashMap<>();
+    private Map<Communicator, Person> persons = new ConcurrentHashMap<>();
 
     private volatile int lastId = 0;
 
@@ -93,6 +94,15 @@ public class GameField {
 
         persons.put(communicator, person);
         broadcast(new Message(ChangingType.SPAWN, person));
+
+        persons.forEach(
+                (otherCommunicator, otherPerson) -> {
+                    if(!person.equals(otherPerson)) {
+                        communicator.send(new Message(ChangingType.SPAWN, otherPerson));
+                    }
+                }
+        );
+
         return person;
     }
 
