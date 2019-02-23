@@ -27,6 +27,14 @@ class Person {
       ctx.beginPath()
       ctx.arc(this.center.x, this.center.y, this.size, 0, 2 * Math.PI);
       ctx.fill()
+
+      if(this.username == "mob") return
+
+      ctx.fillStyle = "#000"
+      let fontSize = 15*this.size/20
+      ctx.font = fontSize + "px Arial";
+      ctx.textAlign = "center";
+      ctx.fillText(this.username, this.center.x, this.center.y+this.size+fontSize);
    }
 }
 
