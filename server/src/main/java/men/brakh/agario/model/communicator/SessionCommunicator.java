@@ -20,8 +20,8 @@ public class SessionCommunicator implements Communicator {
     public void send(Message message) {
         try {
             session.getBasicRemote().sendObject(message);
-        } catch (IOException | EncodeException e) {
-            logger.error("Session communication error", e);
+        } catch (IOException | EncodeException ignored) {
+
         }
     }
 }

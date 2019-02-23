@@ -15,6 +15,8 @@ socket.onmessage = onMessage;
 let field = document.getElementById("game-field")
 let ctx = field.getContext('2d');
 
+let intervalId
+
 let persons = new PersonsList() // Список персонажей
 let my_person = null // Персонаж текущего пользователя
 
@@ -77,15 +79,28 @@ function onMessage(event) {
     switch (message.changingType) {
       case "MY_SPAWN":
          my_person = person
-         setInterval(move, 60)
+         intervalId = setInterval(move, 60)
+         // break опущен тк нужно продолжить спавн :)
       case "SPAWN":
          persons.add(person)
-         break;
+         break
       case "DEAD":
+         console.log(message)
          persons.remove(person) // Удаляем из списка убитого персонажа
+         if(person.equals(my_person)) {
+            clearInterval(intervalId)
+            alert("You lose")
+         }
+         break
       case "COORDS_CHANGING":
          persons.change(person)
+         break
+      case "SIZE_CHANGING":
+         persons.resize(person)
+         break
       default:
+         console.log(message)
+         break
     }
     redraw()
 }

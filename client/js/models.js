@@ -3,6 +3,7 @@
 class Person {
    constructor(person_from_json, socket) {
       this.id = person_from_json.id
+      this.username = person_from_json.username
       this.center = person_from_json.center
       this.color = person_from_json.color
       this.size = person_from_json.size
@@ -54,6 +55,11 @@ class PersonsList {
    change(person) {
       let index = this.getArrayIndex(person)
       this.persons[index].center = person.center
+   }
+
+   resize(person) {
+      let index = this.getArrayIndex(person)
+      this.persons[index].size = person.size
    }
 
    toArray() {
