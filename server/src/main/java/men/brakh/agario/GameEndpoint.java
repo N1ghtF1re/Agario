@@ -6,6 +6,8 @@ import men.brakh.agario.model.game.GameField;
 import men.brakh.agario.model.message.Message;
 import men.brakh.agario.model.message.MessageDecoder;
 import men.brakh.agario.model.message.MessageEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
@@ -17,31 +19,28 @@ import java.io.IOException;
         decoders = MessageDecoder.class,
         encoders = MessageEncoder.class)
 public class GameEndpoint {
-    private static GameField gameField = new GameField();
-
     private Communicator communicator;
+    private static GameField gameField = new GameField(true);
+    private static Logger logger = LoggerFactory.getLogger(GameEndpoint.class);
 
     @OnOpen
     public void onOpen(Session session, @PathParam("username") String username) {
         communicator = new SessionCommunicator(session);
         gameField.add(username, communicator);
-        System.out.println(username + communicator.toString());
     }
 
     @OnMessage
     public void onMessage(Session session, Message message) {
-        System.out.println(message);
 
-        System.out.println(message.getChangingType());
 
         switch (message.getChangingType()) {
             case COORDS_CHANGING:
                 gameField.move(communicator, message.getValue().getCenter());
+                break;
 
             default:
-                System.out.println("BUG");
+                System.out.println("BUG" + message + message.getValue().getUsername());
         }
-        System.out.println(message.getValue().getUsername() + communicator.toString());
     }
 
     @OnClose
@@ -51,7 +50,7 @@ public class GameEndpoint {
 
     @OnError
     public void onError(Session session, Throwable throwable) {
-        // Do error handling here
+        logger.error("Endpoint Exception", throwable);
     }
 
 }

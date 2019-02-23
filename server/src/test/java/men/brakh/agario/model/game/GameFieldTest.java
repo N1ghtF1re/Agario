@@ -23,7 +23,7 @@ public class GameFieldTest {
 
     @Test
     public void add() {
-        GameField gameField = new GameField();
+        GameField gameField = new GameField(false);
         TestCommunicator com1 = new TestCommunicator();
         gameField.add("1", com1);
 
@@ -37,7 +37,7 @@ public class GameFieldTest {
 
     @Test
     public void move() {
-        GameField gameField = new GameField();
+        GameField gameField = new GameField(false);
         TestCommunicator com1 = new TestCommunicator();
         TestCommunicator com2 = new TestCommunicator();
 

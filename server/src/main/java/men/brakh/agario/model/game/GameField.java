@@ -5,25 +5,33 @@ import men.brakh.agario.model.Point;
 import men.brakh.agario.model.communicator.Communicator;
 import men.brakh.agario.model.enums.ChangingType;
 import men.brakh.agario.model.message.Message;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GameField {
+    Logger logger = LoggerFactory.getLogger(GameField.class);
+
     private GameConfig config = GameConfig.getInstance();
 
     private Map<Communicator, Person> persons = new ConcurrentHashMap<>();
 
     private volatile int lastId = 0;
 
-    private int width;
-    private int height;
+    private MobsManager mobsManager;
 
 
     public GameField() {
-        width = config.getFieldWidth();
-        height = config.getFieldHeight();
+        this(true);
+    }
+
+    public GameField(boolean withMobs) {
+        if(withMobs) {
+            mobsManager = new MobsManager(this);
+        }
     }
 
     /**
@@ -45,8 +53,8 @@ public class GameField {
      * Получение точки, где нет игроков
      */
     private Point getFreePoint() {
-        int x = new Random().nextInt(width);
-        int y = new Random().nextInt(height);
+        int x = new Random().nextInt(config.getFieldWidth());
+        int y = new Random().nextInt(config.getFieldHeight());
 
         final boolean[] isFree = {true};
         persons.forEach(
@@ -129,9 +137,10 @@ public class GameField {
                         }
 
                         extendedPerson.eat(deadPerson);
-                        broadcast(new Message(ChangingType.SIZE_CHANGING, extendedPerson));
-                        broadcast(new Message(ChangingType.DEAD, deadPerson));
                         kill(getCommunicator(deadPerson));
+                        broadcast(new Message(ChangingType.SIZE_CHANGING, extendedPerson));
+                        logger.info(String.format("%s[%d] eat %s[%d]", extendedPerson.getUsername(), extendedPerson.getId(),
+                                deadPerson.getUsername(), deadPerson.getId()));
                     }
                 }
         );
@@ -169,9 +178,8 @@ public class GameField {
 
     public void kill(Communicator communicator) {
         Person person = persons.get(communicator);
-        persons.remove(communicator);
-
         broadcast(new Message(ChangingType.DEAD, person));
+        persons.remove(communicator);
     }
 
     /**
