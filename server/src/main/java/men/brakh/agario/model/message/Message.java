@@ -40,4 +40,12 @@ public class Message {
     public void setValue(Person person) {
         this.person = person;
     }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "changingType=" + changingType +
+                ", person=" + person +
+                '}';
+    }
 }

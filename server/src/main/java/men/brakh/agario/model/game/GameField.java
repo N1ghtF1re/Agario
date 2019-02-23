@@ -3,6 +3,7 @@ package men.brakh.agario.model.game;
 import men.brakh.agario.config.GameConfig;
 import men.brakh.agario.model.Point;
 import men.brakh.agario.model.communicator.Communicator;
+import men.brakh.agario.model.communicator.EmptyCommunicator;
 import men.brakh.agario.model.enums.ChangingType;
 import men.brakh.agario.model.message.Message;
 
@@ -11,12 +12,26 @@ import java.util.*;
 public class GameField {
     private GameConfig config = GameConfig.getInstance();
 
-    private Map<Person, Communicator> persons = new HashMap<>();
+    private Map<Communicator, Person> persons = new HashMap<>();
 
     private volatile int lastId = 0;
 
     private int width = 1080;
     private int height = 720;
+
+    public Person spawnMob() {
+        Person mob = Person.newBuilder()
+                .setUsername("mob")
+                .setCenter(getFreePoint())
+                .setId(getNewId())
+                .setColor(getRandColor())
+                .setSize(10)
+                .build();
+
+        persons.put(new EmptyCommunicator(), mob);
+        broadcast(new Message(ChangingType.SPAWN, mob));
+        return mob;
+    }
 
     /**
      * Получение рандомного цвета для нового игрока
@@ -42,7 +57,7 @@ public class GameField {
 
         final boolean[] isFree = {true};
         persons.forEach(
-                (currPerson, ignored) -> {
+                (communicator, currPerson) -> {
                     if( (x > currPerson.getCenter().getX() - currPerson.getSize()
                             && x < currPerson.getCenter().getX() + currPerson.getSize()
                         ) || (
@@ -76,8 +91,8 @@ public class GameField {
                 .setCenter(getFreePoint())
                 .build();
 
-        communicator.send(new Message(ChangingType.SPAWN, person));
-        persons.put(person, communicator);
+        persons.put(communicator, person);
+        broadcast(new Message(ChangingType.SPAWN, person));
         return person;
     }
 
@@ -90,18 +105,20 @@ public class GameField {
         boolean[] isDead = {false};
 
         persons.forEach(
-                (secondPerson, communicator) -> {
+                (communicator, secondPerson) -> {
                     if(person.isIntersect(secondPerson)) {
                         Person deadPerson;
                         Person extendedPerson;
 
-                        if(person.getSize() >= secondPerson.getSize()) {
+                        if(person.getSize() > secondPerson.getSize()) {
                             deadPerson = secondPerson;
                             extendedPerson = person;
-                        } else {
+                        } else if(person.getSize() < secondPerson.getSize()){
                             deadPerson = person;
                             isDead[0] = true;
                             extendedPerson = secondPerson;
+                        } else {
+                            return;
                         }
 
                         extendedPerson.eat(deadPerson);
@@ -114,34 +131,32 @@ public class GameField {
         return isDead[0];
     }
 
-    private Person getPerson(Person person) {
-        final Person[] foundedPerson = new Person[1];
+    public Communicator getCommunicator(Person person) {
+        Communicator[] communicator = {null};
         persons.forEach(
-                (personInMap, communicator) -> {
-                    if(personInMap.equals(person)) {
-                        foundedPerson[0] = personInMap;
+                (communicator1, person1) -> {
+                    if(person.equals(person1)) {
+                        communicator[0] = communicator1;
                     }
                 }
         );
 
-        return foundedPerson[0];
+        return communicator[0];
     }
 
     /**
      * Перемещение персонажа
-     * @param person Персонаж
      */
-    public void move(Person person, Point newPoint) {
+    public void move(Communicator communicator, Point newPoint) {
+        Person person = persons.get(communicator);
+        // TODO: CHEATING CHECKING
+        person.changeCenter(newPoint);
+
         if(checkForIntersect(person)) {
             return;
         }
 
-        Person personFromMap = getPerson(person);
-
-        // TODO: CHEATING CHECKING
-        personFromMap.changeCenter(newPoint);
-
-        broadcast(new Message(ChangingType.COORDS_CHANGING, personFromMap));
+        broadcast(new Message(ChangingType.COORDS_CHANGING, person));
     }
 
     /**
@@ -150,7 +165,7 @@ public class GameField {
      */
     private void broadcast(Message message) {
         persons.forEach(
-                (person, communicator) -> {
+                (communicator, person) -> {
                     communicator.send(message);
                 }
         );

@@ -20,22 +20,29 @@ import java.io.IOException;
 public class GameEndpoint {
     private static GameField gameField = new GameField();
 
+    private Communicator communicator;
+
     @OnOpen
     public void onOpen(Session session, @PathParam("username") String username) {
-        Communicator communicator = new SessionCommunicator(session);
+        communicator = new SessionCommunicator(session);
         gameField.add(username, communicator);
+        System.out.println(username + communicator.toString());
     }
 
     @OnMessage
     public void onMessage(Session session, Message message) {
+        System.out.println(message);
+
+        System.out.println(message.getChangingType());
 
         switch (message.getChangingType()) {
             case COORDS_CHANGING:
-                gameField.move(message.getValue(), message.getValue().getCenter());
+                gameField.move(communicator, message.getValue().getCenter());
 
             default:
                 System.out.println("BUG");
         }
+        System.out.println(message.getValue().getUsername() + communicator.toString());
     }
 
     @OnClose
