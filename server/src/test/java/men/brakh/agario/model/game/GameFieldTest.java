@@ -52,11 +52,11 @@ public class GameFieldTest {
         assertEquals(com1.messages.get(com1.messages.size() - 1).getValue().getUsername(), "1");
         assertEquals(com2.messages.get(com2.messages.size() - 1).getValue().getUsername(), "1");
 
-        Person mob = gameField.spawnMob();
+        Communicator mobCommunicator = new TestCommunicator();
+        Person mob = gameField.add("mob", mobCommunicator, 10);
         assertEquals(com1.messages.get(com1.messages.size() - 1).getChangingType(), ChangingType.SPAWN);
         Point mobCenter = com1.messages.get(com1.messages.size() - 1).getValue().getCenter();
 
-        Communicator mobCommunicator = gameField.getCommunicator(mob);
         gameField.move(mobCommunicator, person2.getCenter());
 
         assertEquals(com1.messages.get(com1.messages.size() - 1).getChangingType(), ChangingType.DEAD);

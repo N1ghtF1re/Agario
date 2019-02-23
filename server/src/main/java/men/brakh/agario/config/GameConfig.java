@@ -2,7 +2,6 @@ package men.brakh.agario.config;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
 import java.util.Properties;
 
 public class GameConfig {
@@ -11,6 +10,11 @@ public class GameConfig {
     private int spawnSize;
     private String[] availableColors;
     private int maxSpeed;
+
+    private int mobsCount;
+    private int mobSize;
+    private int fieldHeight;
+    private int fieldWidth;
 
     public int getSpawnSize() {
         return spawnSize;
@@ -22,6 +26,22 @@ public class GameConfig {
 
     public int getMaxSpeed() {
         return maxSpeed;
+    }
+
+    public int getMobsCount() {
+        return mobsCount;
+    }
+
+    public int getMobSize() {
+        return mobSize;
+    }
+
+    public int getFieldHeight() {
+        return fieldHeight;
+    }
+
+    public int getFieldWidth() {
+        return fieldWidth;
     }
 
     public static synchronized GameConfig getInstance() {
@@ -45,5 +65,9 @@ public class GameConfig {
         spawnSize = Integer.valueOf(editorProps.getProperty("spawn.size"));
         availableColors = editorProps.getProperty("spawn.colors").split(",");
         maxSpeed = Integer.valueOf(editorProps.getProperty("speed.max"));
+        fieldWidth = Integer.valueOf(editorProps.getProperty("field.width"));
+        fieldHeight = Integer.valueOf(editorProps.getProperty("field.height"));
+        mobsCount = Integer.valueOf(editorProps.getProperty("mobs.count"));
+        mobSize = Integer.valueOf(editorProps.getProperty("mobs.size"));
     }
 }

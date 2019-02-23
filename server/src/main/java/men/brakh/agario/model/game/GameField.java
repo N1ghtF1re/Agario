@@ -3,11 +3,11 @@ package men.brakh.agario.model.game;
 import men.brakh.agario.config.GameConfig;
 import men.brakh.agario.model.Point;
 import men.brakh.agario.model.communicator.Communicator;
-import men.brakh.agario.model.communicator.EmptyCommunicator;
 import men.brakh.agario.model.enums.ChangingType;
 import men.brakh.agario.model.message.Message;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GameField {
@@ -17,21 +17,13 @@ public class GameField {
 
     private volatile int lastId = 0;
 
-    private int width = 1080;
-    private int height = 720;
+    private int width;
+    private int height;
 
-    public Person spawnMob() {
-        Person mob = Person.newBuilder()
-                .setUsername("mob")
-                .setCenter(getFreePoint())
-                .setId(getNewId())
-                .setColor(getRandColor())
-                .setSize(10)
-                .build();
 
-        persons.put(new EmptyCommunicator(), mob);
-        broadcast(new Message(ChangingType.SPAWN, mob));
-        return mob;
+    public GameField() {
+        width = config.getFieldWidth();
+        height = config.getFieldHeight();
     }
 
     /**
@@ -83,11 +75,11 @@ public class GameField {
      * @param communicator Объект для связи с игроком
      * @return добавленный игрок
      */
-    public Person add(String username, Communicator communicator) {
+    public Person add(String username, Communicator communicator, int size) {
         Person person = Person.newBuilder()
                 .setId(getNewId())
                 .setUsername(username)
-                .setSize(config.getSpawnSize())
+                .setSize(size)
                 .setColor(getRandColor())
                 .setCenter(getFreePoint())
                 .build();
@@ -105,6 +97,10 @@ public class GameField {
         );
 
         return person;
+    }
+
+    public Person add(String username, Communicator communicator) {
+        return add(username, communicator, config.getSpawnSize());
     }
 
     /**
@@ -135,6 +131,7 @@ public class GameField {
                         extendedPerson.eat(deadPerson);
                         broadcast(new Message(ChangingType.SIZE_CHANGING, extendedPerson));
                         broadcast(new Message(ChangingType.DEAD, deadPerson));
+                        kill(getCommunicator(deadPerson));
                     }
                 }
         );
