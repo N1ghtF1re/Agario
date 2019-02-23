@@ -40,9 +40,9 @@ public class Person {
      * Съесть другого персонажа
      * @param person другой персонаж
      */
-    public void eat(Person person) {
+    public void eat(Person person, double coefficient) {
         if(this.size > person.size) {
-            this.size += person.size / 2;
+            this.size += person.size / coefficient;
             person.size = -1;
         }
     }

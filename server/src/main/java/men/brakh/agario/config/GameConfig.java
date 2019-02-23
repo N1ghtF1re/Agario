@@ -10,11 +10,11 @@ public class GameConfig {
     private int spawnSize;
     private String[] availableColors;
     private int maxSpeed;
-
     private int mobsCount;
     private int mobSize;
     private int fieldHeight;
     private int fieldWidth;
+    private double eatingCoefficient;
 
     public int getSpawnSize() {
         return spawnSize;
@@ -44,6 +44,10 @@ public class GameConfig {
         return fieldWidth;
     }
 
+    public double getEatingCoefficient() {
+        return eatingCoefficient;
+    }
+
     public static synchronized GameConfig getInstance() {
         if (instance == null) {
             instance = new GameConfig();
@@ -69,5 +73,6 @@ public class GameConfig {
         fieldHeight = Integer.valueOf(editorProps.getProperty("field.height"));
         mobsCount = Integer.valueOf(editorProps.getProperty("mobs.count"));
         mobSize = Integer.valueOf(editorProps.getProperty("mobs.size"));
+        eatingCoefficient = Double.valueOf(editorProps.getProperty("eating.coefficient"));
     }
 }

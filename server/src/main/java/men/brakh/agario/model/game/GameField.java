@@ -13,7 +13,7 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GameField {
-    Logger logger = LoggerFactory.getLogger(GameField.class);
+    private Logger logger = LoggerFactory.getLogger(GameField.class);
 
     private GameConfig config = GameConfig.getInstance();
 
@@ -136,7 +136,7 @@ public class GameField {
                             return;
                         }
 
-                        extendedPerson.eat(deadPerson);
+                        extendedPerson.eat(deadPerson, config.getEatingCoefficient());
                         kill(getCommunicator(deadPerson));
                         broadcast(new Message(ChangingType.SIZE_CHANGING, extendedPerson));
                         logger.info(String.format("%s[%d] eat %s[%d]", extendedPerson.getUsername(), extendedPerson.getId(),
