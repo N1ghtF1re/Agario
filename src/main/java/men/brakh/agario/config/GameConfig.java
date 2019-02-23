@@ -10,6 +10,7 @@ public class GameConfig {
 
     private int spawnSize;
     private String[] availableColors;
+    private int maxSpeed;
 
     public int getSpawnSize() {
         return spawnSize;
@@ -17,6 +18,10 @@ public class GameConfig {
 
     public String[] getAvailableColors() {
         return availableColors;
+    }
+
+    public int getMaxSpeed() {
+        return maxSpeed;
     }
 
     public static synchronized GameConfig getInstance() {
@@ -39,5 +44,6 @@ public class GameConfig {
         // Заполняем значения
         spawnSize = Integer.valueOf(editorProps.getProperty("spawn.size"));
         availableColors = editorProps.getProperty("spawn.colors").split(",");
+        maxSpeed = Integer.valueOf(editorProps.getProperty("speed.max"));
     }
 }

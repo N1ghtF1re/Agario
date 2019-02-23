@@ -13,10 +13,20 @@ public class Point {
         this.y = y;
     }
 
+    public Point add(Point deltaPoint) {
+        x += deltaPoint.x;
+        y += deltaPoint.y;
+        return this;
+    }
+
+
+    public double distanceTo(Point point) {
+        return Math.sqrt( (x - point.x)*(x - point.x) + (y - point.y)*(y - point.y));
+    }
+
     public int getX() {
         return x;
     }
-
 
     public int getY() {
         return y;

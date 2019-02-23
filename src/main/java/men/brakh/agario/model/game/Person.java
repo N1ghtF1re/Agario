@@ -34,14 +34,7 @@ public class Person {
     private Point center;
 
 
-    public Person() {
-    }
-
-    public Person(String username) {
-        this.username = username;
-        this.size = 20;
-        this.color = "#000";
-    }
+    private Person(){}
 
     /**
      * Съесть другого персонажа
@@ -54,44 +47,43 @@ public class Person {
         }
     }
 
-    public int getId() {
-        return id;
+    /**
+     * Проверка, пересекаются ли персонажи
+     * @return true, если пересекаются
+     */
+    public boolean isIntersect(Person person) {
+        int r1 = size;
+        int r2 = person.size;
+
+        double d = center.distanceTo(person.center);
+
+        int sr= r1 + r2;
+
+        return d<=sr && d>=Math.abs(r1 - r2);
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void changeCenter(Point center) {
+        this.center = center;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public int getSize() {
         return size;
     }
 
-    public void setSize(int size) {
-        this.size = size;
-    }
-
     public String getUsername() {
         return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getColor() {
         return color;
     }
 
-    public void setColor(String color) {
-        this.color = color;
-    }
-
     public Point getCenter() {
         return center;
-    }
-
-    public void setCenter(Point center) {
-        this.center = center;
     }
 
     @Override
@@ -105,5 +97,51 @@ public class Person {
     @Override
     public int hashCode() {
         return Objects.hash(id, username);
+    }
+
+
+    /**
+     * Получение билдера
+     */
+    public static Builder newBuilder() {
+        return new Person().new Builder();
+    }
+
+
+    public class Builder {
+        private Builder() {
+        }
+
+        public Builder setUsername(String username) {
+            Person.this.username = username;
+            return this;
+        }
+
+        public Builder setId(int id) {
+            Person.this.id = id;
+            return this;
+        }
+
+        public Builder setSize(int size) {
+            Person.this.size = size;
+            return this;
+        }
+
+        public Builder setColor(String color) {
+            Person.this.color = color;
+            return this;
+        }
+
+        public Builder setCenter(Point center) {
+            Person.this.center = center;
+            return this;
+        }
+
+        public Person build() {
+            if(username == null) {
+                throw new RuntimeException("Username not found");
+            }
+            return Person.this;
+        }
     }
 }
