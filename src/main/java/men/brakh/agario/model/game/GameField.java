@@ -114,23 +114,34 @@ public class GameField {
         return isDead[0];
     }
 
+    private Person getPerson(Person person) {
+        final Person[] foundedPerson = new Person[1];
+        persons.forEach(
+                (personInMap, communicator) -> {
+                    if(personInMap.equals(person)) {
+                        foundedPerson[0] = personInMap;
+                    }
+                }
+        );
+
+        return foundedPerson[0];
+    }
+
     /**
      * Перемещение персонажа
      * @param person Персонаж
-     * @param deltaPoints Изменение координат
      */
-    public void move(Person person, Point deltaPoints) {
-        if(deltaPoints.getY() > config.getMaxSpeed() || deltaPoints.getX() > config.getMaxSpeed()) {
-            System.out.println("ЧИТЕР!");
-        }
-
+    public void move(Person person, Point newPoint) {
         if(checkForIntersect(person)) {
             return;
         }
 
-        person.changeCenter(person.getCenter().add(deltaPoints));
+        Person personFromMap = getPerson(person);
 
-        broadcast(new Message(ChangingType.COORDS_CHANGING, person));
+        // TODO: CHEATING CHECKING
+        personFromMap.changeCenter(newPoint);
+
+        broadcast(new Message(ChangingType.COORDS_CHANGING, personFromMap));
     }
 
     /**

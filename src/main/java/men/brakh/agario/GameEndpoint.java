@@ -1,5 +1,9 @@
 package men.brakh.agario;
 
+import men.brakh.agario.model.communicator.Communicator;
+import men.brakh.agario.model.communicator.SessionCommunicator;
+import men.brakh.agario.model.enums.ChangingType;
+import men.brakh.agario.model.game.GameField;
 import men.brakh.agario.model.message.Message;
 import men.brakh.agario.model.message.MessageDecoder;
 import men.brakh.agario.model.message.MessageEncoder;
@@ -14,25 +18,24 @@ import java.io.IOException;
         decoders = MessageDecoder.class,
         encoders = MessageEncoder.class)
 public class GameEndpoint {
-
-    private Session session;
+    private static GameField gameField = new GameField();
 
     @OnOpen
-    public void onOpen(
-            Session session,
-            @PathParam("username") String username) throws IOException {
-
-        this.session = session;
-        System.out.println(username);
+    public void onOpen(Session session, @PathParam("username") String username) {
+        Communicator communicator = new SessionCommunicator(session);
+        gameField.add(username, communicator);
     }
 
     @OnMessage
-    public void onMessage(Session session, Message message)
-            throws IOException {
-        /*
-        message.setFrom(users.get(session.getId()));
-        broadcast(message);
-        */
+    public void onMessage(Session session, Message message) {
+
+        switch (message.getChangingType()) {
+            case COORDS_CHANGING:
+                gameField.move(message.getValue(), message.getValue().getCenter());
+
+            default:
+                System.out.println("BUG");
+        }
     }
 
     @OnClose
@@ -51,19 +54,4 @@ public class GameEndpoint {
         // Do error handling here
     }
 
-    /*
-    private static void broadcast(Message message)
-            throws IOException, EncodeException {
-
-        chatEndpoints.forEach(endpoint -> {
-            synchronized (endpoint) {
-                try {
-                    endpoint.session.getBasicRemote().
-                            sendObject(message);
-                } catch (IOException | EncodeException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }*/
 }
