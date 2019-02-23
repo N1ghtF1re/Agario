@@ -106,7 +106,7 @@ public class GameField {
 
         persons.forEach(
                 (communicator, secondPerson) -> {
-                    if(person.isIntersect(secondPerson)) {
+                    if(person.isIntersect(secondPerson) && !person.equals(secondPerson)) {
                         Person deadPerson;
                         Person extendedPerson;
 
