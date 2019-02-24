@@ -17,7 +17,7 @@ const FIELD_HEIGHT = 2000
 // VARS
 
 var username = prompt("Enter username")
-var socket = new WebSocket("ws://localhost:8080/agario/" + username);
+var socket = new WebSocket("ws://localhost:1337/agario/" + username);
 
 socket.onmessage = onMessage;
 socket.onclose = onClose;

@@ -41,6 +41,9 @@
                     <webApp>
                         <contextPath>/agario</contextPath>
                     </webApp>
+                    <httpConnector>
+                        <port>1337</port>
+                    </httpConnector>
                 </configuration>
             </plugin>
         </plugins>
