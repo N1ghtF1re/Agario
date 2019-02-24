@@ -5,22 +5,24 @@ const DIR_RIGHT = 1
 const DIR_UP = 2
 const DIR_DOWN = 3
 
-const SPEED = 2
+const SPEED = 3
+const DELAY = 80
 
 // VARS
 
-let username = prompt("Enter username")
-let socket = new WebSocket("ws://localhost:8080/agario/" + username);
+var username = prompt("Enter username")
+var socket = new WebSocket("ws://localhost:8080/agario/" + username);
 
 socket.onmessage = onMessage;
+socket.onclose = onClose;
 
-let field = document.getElementById("game-field")
-let ctx = field.getContext('2d');
+var field = document.getElementById("game-field")
+var ctx = field.getContext('2d');
 
-let intervalId
+var timer
 
-let persons = new PersonsList() // Список персонажей
-let my_person = null // Персонаж текущего пользователя
+var persons = new PersonsList() // Список персонажей
+var my_person = null // Персонаж текущего пользователя
 
 document.onkeydown = function(e) {
    switch (e.key) {
@@ -81,7 +83,8 @@ function onMessage(event) {
     switch (message.changingType) {
       case "MY_SPAWN":
          my_person = person
-         intervalId = setInterval(move, 60)
+         timer = new Timer(move, DELAY);
+         timer.start()
          // break опущен тк нужно продолжить спавн :)
       case "SPAWN":
          persons.add(person)
@@ -90,7 +93,7 @@ function onMessage(event) {
          console.log(message)
          persons.remove(person) // Удаляем из списка убитого персонажа
          if(person.equals(my_person)) {
-            clearInterval(intervalId)
+            timer.stop()
             alert("You lose")
          }
          break
@@ -105,4 +108,9 @@ function onMessage(event) {
          break
     }
     redraw()
+}
+
+function onClose() {
+   alert("Server die")
+   timer.stop()
 }

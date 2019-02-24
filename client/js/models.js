@@ -74,3 +74,30 @@ class PersonsList {
       return this.persons
    }
 }
+
+class Timer {
+   constructor(clb, timeout) {
+        this.clb = clb;
+        this.timeout = timeout;
+        this.stopTimeout = null;
+        this.precision = -1;
+     }
+
+    start() {
+        let me = this;
+        let now = new Date();
+        if(me.precision === -1) {
+            me.precision = now.getTime()
+        }
+        me.stopTimeout = setTimeout(function(){
+            me.start()
+        }, me.precision - now.getTime() + me.timeout)
+        me.precision += me.timeout
+        me.clb()
+    }
+
+    stop() {
+        clearTimeout(this.stopTimeout)
+        this.precision = -1
+    }
+}

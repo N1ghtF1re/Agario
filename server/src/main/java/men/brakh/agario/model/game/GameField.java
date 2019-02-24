@@ -8,6 +8,7 @@ import men.brakh.agario.model.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,6 +19,7 @@ public class GameField {
     private GameConfig config = GameConfig.getInstance();
 
     private Map<Communicator, Person> persons = new ConcurrentHashMap<>();
+    private Map<Communicator, Date> lastUpdate = new ConcurrentHashMap<>();
 
     private volatile int lastId = 0;
 
@@ -93,6 +95,7 @@ public class GameField {
                 .build();
 
         persons.put(communicator, person);
+        lastUpdate.put(communicator, new Date());
         communicator.send(new Message(ChangingType.MY_SPAWN, person));
         broadcast(new Message(ChangingType.SPAWN, person), person);
 
@@ -166,6 +169,24 @@ public class GameField {
      */
     public void move(Communicator communicator, Point newPoint) {
         Person person = persons.get(communicator);
+
+
+        int delay = (int) ((new Date().getTime() - lastUpdate.get(communicator).getTime()));
+        lastUpdate.put(communicator, new Date());
+
+        if(delay < config.getMinDelay() - 5 // Поегрешность
+                || Math.abs(person.getCenter().getX() - newPoint.getX()) > config.getMaxSpeed()
+                || Math.abs(person.getCenter().getY() - newPoint.getY()) > config.getMaxSpeed()) {
+            logger.warn(String.format("CHEATING by %s[%d]. Delay: %d, speed: %d/%d",
+                    person.getUsername(), person.getId(), delay,
+                    person.getCenter().getX() - newPoint.getX(),
+                    person.getCenter().getY() - newPoint.getY()));
+
+            communicator.send(new Message(ChangingType.CHEATING, person));
+            broadcast(new Message(ChangingType.COORDS_CHANGING, person));
+            return;
+
+        }
         // TODO: CHEATING CHECKING
         person.changeCenter(newPoint);
 
@@ -180,6 +201,7 @@ public class GameField {
         Person person = persons.get(communicator);
         broadcast(new Message(ChangingType.DEAD, person));
         persons.remove(communicator);
+        lastUpdate.remove(communicator);
     }
 
     /**

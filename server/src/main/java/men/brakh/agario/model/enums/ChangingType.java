@@ -5,5 +5,6 @@ public enum ChangingType {
     SPAWN,
     COORDS_CHANGING,
     DEAD,
-    SIZE_CHANGING
+    SIZE_CHANGING,
+    CHEATING
 }

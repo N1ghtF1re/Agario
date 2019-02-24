@@ -15,6 +15,7 @@ public class GameConfig {
     private int fieldHeight;
     private int fieldWidth;
     private double eatingCoefficient;
+    private int minDelay;
 
     public int getSpawnSize() {
         return spawnSize;
@@ -42,6 +43,10 @@ public class GameConfig {
 
     public int getFieldWidth() {
         return fieldWidth;
+    }
+
+    public int getMinDelay() {
+        return minDelay;
     }
 
     public double getEatingCoefficient() {
@@ -74,5 +79,6 @@ public class GameConfig {
         mobsCount = Integer.valueOf(editorProps.getProperty("mobs.count"));
         mobSize = Integer.valueOf(editorProps.getProperty("mobs.size"));
         eatingCoefficient = Double.valueOf(editorProps.getProperty("eating.coefficient"));
+        minDelay = Integer.valueOf(editorProps.getProperty("speed.delay"));
     }
 }
