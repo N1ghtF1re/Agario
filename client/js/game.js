@@ -6,7 +6,7 @@ const DIR_UP = 2
 const DIR_DOWN = 3
 
 const SPEED = 3
-const DELAY = 80
+const DELAY = 40
 
 const VISIBLE_WIDTH = document.body.clientWidth
 const VISIBLE_HEIGHT = document.body.clientHeight

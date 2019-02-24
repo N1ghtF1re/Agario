@@ -170,7 +170,9 @@ public class GameField {
     public void move(Communicator communicator, Point newPoint) {
         Person person = persons.get(communicator);
 
-
+        if(!lastUpdate.containsKey(communicator)) {
+            return;
+        }
         int delay = (int) ((new Date().getTime() - lastUpdate.get(communicator).getTime()));
         lastUpdate.put(communicator, new Date());
 
