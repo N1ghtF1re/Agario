@@ -9,5 +9,15 @@
 
 </p>
 </p>
+## About
+A simple implementation of the once popular game agario, built on websockets. There is camera movement, mobs spawn, leaders list, everything is as it should.
 
-A simple implementation of the once popular game agario, built on websockets
+## Control
+Management is carried out by arrows on the keyboard
+
+## Used technologies
+The server is written in pure Java using Gson libraries, Websocket API and Jetty server.
+The client is written in pure JS without libraries
+
+## Screen
+![Screenshot](https://i.imgur.com/WtzmLGs.png)
