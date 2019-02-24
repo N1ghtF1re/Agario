@@ -14,18 +14,30 @@ class Person {
       return person.id === this.id
    }
 
-   specialDraw(ctx) { // Отрисовка владельца очереди
-      this.draw(ctx)
+   specialDraw(ctx, x0, y0) { // Отрисовка владельца очереди
+      this.draw(ctx, x0, y0, true)
       ctx.fillStyle = "#cf00ff"
       ctx.beginPath()
-      ctx.arc(this.center.x, this.center.y, this.size+2, 0, 2 * Math.PI);
+
+      let x = this.center.x - x0
+      let y = this.center.y - y0
+
+
+      ctx.arc(x,y, this.size+2, 0, 2 * Math.PI);
       ctx.stroke()
    }
 
-   draw(ctx) {
+   draw(ctx, x0, y0, ignore) {
+      var x = this.center.x - x0
+      var y = this.center.y - y0
+
+      if(ignore != true && (x < 0 || y < 0 || x > VISIBLE_WIDTH || y > VISIBLE_HEIGHT)) {
+         return
+      }
+
       ctx.fillStyle = this.color
       ctx.beginPath()
-      ctx.arc(this.center.x, this.center.y, this.size, 0, 2 * Math.PI);
+      ctx.arc(x, y, this.size, 0, 2 * Math.PI);
       ctx.fill()
 
       if(this.username == "mob") return
@@ -34,7 +46,7 @@ class Person {
       let fontSize = 15*this.size/20
       ctx.font = fontSize + "px Arial";
       ctx.textAlign = "center";
-      ctx.fillText(this.username, this.center.x, this.center.y+this.size+fontSize);
+      ctx.fillText(this.username, x, y + this.size + fontSize);
    }
 }
 
@@ -72,6 +84,44 @@ class PersonsList {
 
    toArray() {
       return this.persons
+   }
+
+   drawLeaders(ctx) {
+      ctx.fillStyle = "rgba(100,150,185,0.5)";
+      ctx.rect(FIELD_WIDTH - 400, 0, FIELD_WIDTH, 0+300)
+      ctx.fill()
+
+      let leaders = []
+      leaders.unshift([].concat(this.persons));
+
+      function compare(a,b) {
+        if (a.size > b.size)
+          return -1;
+        if (a.size < b.size)
+          return 1;
+        return 0;
+      }
+
+      this.persons.sort(compare)
+
+      ctx.fillStyle = "#000"
+      ctx.font = "20px Arial";
+      ctx.textAlign = "center";
+
+      ctx.fillText("LEADERS: ", FIELD_WIDTH - 260, 40);
+
+      ctx.font = "15px Arial";
+      this.persons.forEach(function(item, i) {
+         if(item.username != "mob") {
+            ctx.fillText(item.username + "[" + item.id + "] - " + item.size,
+                  FIELD_WIDTH - 260, 60 + 20*i);
+         }
+         if(i == 10) {
+            return;
+         }
+      })
+
+
    }
 }
 

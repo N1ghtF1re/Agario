@@ -8,6 +8,12 @@ const DIR_DOWN = 3
 const SPEED = 3
 const DELAY = 80
 
+const VISIBLE_WIDTH = document.body.clientWidth
+const VISIBLE_HEIGHT = document.body.clientHeight
+
+const FIELD_WIDTH = 2000
+const FIELD_HEIGHT = 2000
+
 // VARS
 
 var username = prompt("Enter username")
@@ -17,6 +23,10 @@ socket.onmessage = onMessage;
 socket.onclose = onClose;
 
 var field = document.getElementById("game-field")
+
+field.width = VISIBLE_WIDTH
+field.height = VISIBLE_HEIGHT
+
 var ctx = field.getContext('2d');
 
 var timer
@@ -43,13 +53,35 @@ document.onkeydown = function(e) {
 
 function redraw() {
    ctx.clearRect(0, 0, field.width, field.height)
+   let x0
+
+   // Изменение координат в соотвествии с камерой
+   if(FIELD_WIDTH - my_person.center.x < VISIBLE_WIDTH / 2) {
+      x0 = FIELD_WIDTH - VISIBLE_WIDTH
+   } else if(my_person.center.x < VISIBLE_WIDTH / 2) {
+      x0 = 0
+   } else {
+      x0 = my_person.center.x - VISIBLE_WIDTH / 2
+   }
+   let y0
+   if(FIELD_HEIGHT - my_person.center.y < VISIBLE_HEIGHT / 2) {
+      y0 = FIELD_HEIGHT - VISIBLE_HEIGHT
+   } else if(my_person.center.y < VISIBLE_HEIGHT / 2) {
+      y0 = 0
+   } else {
+      y0 = my_person.center.y - VISIBLE_HEIGHT / 2
+   }
+
+
    persons.toArray().forEach(function(item) {
       if(item.equals(my_person)) {
-         item.specialDraw(ctx)
+         item.specialDraw(ctx, x0, y0)
       } else {
-         item.draw(ctx)
+         item.draw(ctx, x0, y0)
       }
    })
+
+   persons.drawLeaders(ctx)
 }
 
 function move() {
@@ -59,7 +91,7 @@ function move() {
          my_person.center.x -= SPEED
          break;
       case DIR_RIGHT:
-         if(my_person.center.x >= field.width) break
+         if(my_person.center.x >= FIELD_WIDTH) break
          my_person.center.x += SPEED
          break;
       case DIR_UP:
@@ -67,7 +99,7 @@ function move() {
          my_person.center.y -= SPEED
          break;
       case DIR_DOWN:
-         if(my_person.center.y >= field.height) break
+         if(my_person.center.y >= FIELD_HEIGHT) break
          my_person.center.y += SPEED
          break;
    }
