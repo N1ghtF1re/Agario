@@ -9,6 +9,7 @@
 
 </p>
 </p>
+
 ## About
 A simple implementation of the once popular game agario, built on websockets. There is camera movement, mobs spawn, leaders list, everything is as it should.
 
