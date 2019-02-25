@@ -31,7 +31,7 @@ class Person {
       var x = this.center.x - x0
       var y = this.center.y - y0
 
-      if(ignore != true && (x < 0 || y < 0 || x > VISIBLE_WIDTH || y > VISIBLE_HEIGHT)) {
+      if(ignore != true && (x < 0 - persons.size || y < 0 - persons.size || x > VISIBLE_WIDTH + persons.size|| y > VISIBLE_HEIGHT + persons.size)) {
          return
       }
 
