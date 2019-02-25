@@ -2,7 +2,7 @@ package men.brakh.agario.model.game;
 
 import men.brakh.agario.model.Point;
 import men.brakh.agario.model.communicator.Communicator;
-import men.brakh.agario.model.enums.ChangingType;
+import men.brakh.agario.model.enums.EventType;
 import men.brakh.agario.model.message.Message;
 import org.junit.Test;
 
@@ -27,7 +27,7 @@ public class GameFieldTest {
         TestCommunicator com1 = new TestCommunicator();
         gameField.add("1", com1);
 
-        assertEquals(com1.messages.get(0).getChangingType(), ChangingType.SPAWN);
+        assertEquals(com1.messages.get(0).getEventType(), EventType.SPAWN);
 
     }
 
@@ -46,20 +46,20 @@ public class GameFieldTest {
 
         gameField.move(com1, new Point(0,0 ));
 
-        assertEquals(com1.messages.get(com1.messages.size() - 1).getChangingType(), ChangingType.COORDS_CHANGING);
-        assertEquals(com2.messages.get(com2.messages.size() - 1).getChangingType(), ChangingType.COORDS_CHANGING);
+        assertEquals(com1.messages.get(com1.messages.size() - 1).getEventType(), EventType.COORDS_CHANGING);
+        assertEquals(com2.messages.get(com2.messages.size() - 1).getEventType(), EventType.COORDS_CHANGING);
 
         assertEquals(com1.messages.get(com1.messages.size() - 1).getValue().getUsername(), "1");
         assertEquals(com2.messages.get(com2.messages.size() - 1).getValue().getUsername(), "1");
 
         Communicator mobCommunicator = new TestCommunicator();
         Person mob = gameField.add("mob", mobCommunicator, 10);
-        assertEquals(com1.messages.get(com1.messages.size() - 1).getChangingType(), ChangingType.SPAWN);
+        assertEquals(com1.messages.get(com1.messages.size() - 1).getEventType(), EventType.SPAWN);
         Point mobCenter = com1.messages.get(com1.messages.size() - 1).getValue().getCenter();
 
         gameField.move(mobCommunicator, person2.getCenter());
 
-        assertEquals(com1.messages.get(com1.messages.size() - 1).getChangingType(), ChangingType.DEAD);
+        assertEquals(com1.messages.get(com1.messages.size() - 1).getEventType(), EventType.DEAD);
         assertEquals(com1.messages.get(com1.messages.size() - 1).getValue().getId(), 3);
     }
 }

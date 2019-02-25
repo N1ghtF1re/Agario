@@ -5,8 +5,8 @@ const DIR_RIGHT = 1
 const DIR_UP = 2
 const DIR_DOWN = 3
 
-const SPEED = 3
-const DELAY = 40
+const SPEED = 5
+const DELAY = 70
 
 const VISIBLE_WIDTH = document.body.clientWidth
 const VISIBLE_HEIGHT = document.body.clientHeight
@@ -104,7 +104,7 @@ function move() {
          break;
    }
    redraw()
-   let msg = {"changingType": "COORDS_CHANGING", "person": my_person}
+   let msg = {"eventType": "COORDS_CHANGING", "person": my_person}
    socket.send(JSON.stringify(msg))
 }
 
@@ -112,7 +112,7 @@ function onMessage(event) {
     let message = JSON.parse(event.data);
     let person = new Person(message.person, socket)
 
-    switch (message.changingType) {
+    switch (message.eventType) {
       case "MY_SPAWN":
          my_person = person
          timer = new Timer(move, DELAY);

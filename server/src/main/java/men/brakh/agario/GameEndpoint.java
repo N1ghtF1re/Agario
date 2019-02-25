@@ -1,7 +1,7 @@
 package men.brakh.agario;
 
 import men.brakh.agario.model.communicator.Communicator;
-import men.brakh.agario.model.communicator.SessionCommunicator;
+import men.brakh.agario.model.communicator.impl.SessionCommunicator;
 import men.brakh.agario.model.game.GameField;
 import men.brakh.agario.model.message.Message;
 import men.brakh.agario.model.message.MessageDecoder;
@@ -33,7 +33,7 @@ public class GameEndpoint {
     public void onMessage(Session session, Message message) {
 
 
-        switch (message.getChangingType()) {
+        switch (message.getEventType()) {
             case COORDS_CHANGING:
                 gameField.move(communicator, message.getValue().getCenter());
                 break;

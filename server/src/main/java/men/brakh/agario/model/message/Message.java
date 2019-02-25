@@ -1,6 +1,6 @@
 package men.brakh.agario.model.message;
 
-import men.brakh.agario.model.enums.ChangingType;
+import men.brakh.agario.model.enums.EventType;
 import men.brakh.agario.model.game.Person;
 
 /**
@@ -10,7 +10,7 @@ public class Message {
     /**
      * Тип изменения в игре (убийство персонажа, перемещение и тд)
      */
-    private ChangingType changingType;
+    private EventType eventType;
 
     /**
      * Персонаж, с которым случились изменения
@@ -20,17 +20,17 @@ public class Message {
     public Message() {
     }
 
-    public Message(ChangingType changingType, Person person) {
-        this.changingType = changingType;
+    public Message(EventType eventType, Person person) {
+        this.eventType = eventType;
         this.person = person;
     }
 
-    public ChangingType getChangingType() {
-        return changingType;
+    public EventType getEventType() {
+        return eventType;
     }
 
-    public void setChangingType(ChangingType changingType) {
-        this.changingType = changingType;
+    public void setEventType(EventType eventType) {
+        this.eventType = eventType;
     }
 
     public Person getValue() {
@@ -44,7 +44,7 @@ public class Message {
     @Override
     public String toString() {
         return "Message{" +
-                "changingType=" + changingType +
+                "eventType=" + eventType +
                 ", person=" + person +
                 '}';
     }

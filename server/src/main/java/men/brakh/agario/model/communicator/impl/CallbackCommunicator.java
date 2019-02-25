@@ -1,11 +1,12 @@
-package men.brakh.agario.model.communicator;
+package men.brakh.agario.model.communicator.impl;
 
+import men.brakh.agario.model.communicator.Communicator;
 import men.brakh.agario.model.message.Message;
 
 import java.util.concurrent.Callable;
 import java.util.function.BiPredicate;
 
-public class CallbackCommunicator implements Communicator{
+public class CallbackCommunicator implements Communicator {
     private Callable<Void> func;
     private BiPredicate<Message, Communicator> condition;
 

@@ -3,7 +3,7 @@ package men.brakh.agario.model.game;
 import men.brakh.agario.config.GameConfig;
 import men.brakh.agario.model.Point;
 import men.brakh.agario.model.communicator.Communicator;
-import men.brakh.agario.model.enums.ChangingType;
+import men.brakh.agario.model.enums.EventType;
 import men.brakh.agario.model.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,13 +96,13 @@ public class GameField {
 
         persons.put(communicator, person);
         lastUpdate.put(communicator, new Date());
-        communicator.send(new Message(ChangingType.MY_SPAWN, person));
-        broadcast(new Message(ChangingType.SPAWN, person), person);
+        communicator.send(new Message(EventType.MY_SPAWN, person));
+        broadcast(new Message(EventType.SPAWN, person), person);
 
         persons.forEach(
                 (otherCommunicator, otherPerson) -> {
                     if(!person.equals(otherPerson)) {
-                        communicator.send(new Message(ChangingType.SPAWN, otherPerson));
+                        communicator.send(new Message(EventType.SPAWN, otherPerson));
                     }
                 }
         );
@@ -141,7 +141,7 @@ public class GameField {
 
                         extendedPerson.eat(deadPerson, config.getEatingCoefficient());
                         kill(getCommunicator(deadPerson));
-                        broadcast(new Message(ChangingType.SIZE_CHANGING, extendedPerson));
+                        broadcast(new Message(EventType.SIZE_CHANGING, extendedPerson));
                         logger.info(String.format("%s[%d] eat %s[%d]", extendedPerson.getUsername(), extendedPerson.getId(),
                                 deadPerson.getUsername(), deadPerson.getId()));
                     }
@@ -184,8 +184,8 @@ public class GameField {
                     person.getCenter().getX() - newPoint.getX(),
                     person.getCenter().getY() - newPoint.getY()));
 
-            communicator.send(new Message(ChangingType.CHEATING, person));
-            broadcast(new Message(ChangingType.COORDS_CHANGING, person));
+            communicator.send(new Message(EventType.CHEATING, person));
+            broadcast(new Message(EventType.COORDS_CHANGING, person));
             return;
 
         }
@@ -196,12 +196,12 @@ public class GameField {
             return;
         }
 
-        broadcast(new Message(ChangingType.COORDS_CHANGING, person));
+        broadcast(new Message(EventType.COORDS_CHANGING, person));
     }
 
     public void kill(Communicator communicator) {
         Person person = persons.get(communicator);
-        broadcast(new Message(ChangingType.DEAD, person));
+        broadcast(new Message(EventType.DEAD, person));
         persons.remove(communicator);
         lastUpdate.remove(communicator);
     }

@@ -1,6 +1,6 @@
 package men.brakh.agario.model.enums;
 
-public enum ChangingType {
+public enum EventType {
     MY_SPAWN,
     SPAWN,
     COORDS_CHANGING,

@@ -1,9 +1,9 @@
 package men.brakh.agario.model.game;
 
 import men.brakh.agario.config.GameConfig;
-import men.brakh.agario.model.communicator.CallbackCommunicator;
+import men.brakh.agario.model.communicator.impl.CallbackCommunicator;
 import men.brakh.agario.model.communicator.Communicator;
-import men.brakh.agario.model.enums.ChangingType;
+import men.brakh.agario.model.enums.EventType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +20,7 @@ class MobsManager {
     private void spawn() {
         Communicator communicator = new CallbackCommunicator(
                 () -> {spawn(); return null;},
-                (message, thisCommunicator) -> message.getChangingType() == ChangingType.DEAD &&
+                (message, thisCommunicator) -> message.getEventType() == EventType.DEAD &&
                         thisCommunicator.equals(field.getCommunicator(message.getValue()))
         );
 

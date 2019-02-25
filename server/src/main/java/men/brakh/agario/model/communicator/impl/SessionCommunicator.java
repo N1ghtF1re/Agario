@@ -1,5 +1,6 @@
-package men.brakh.agario.model.communicator;
+package men.brakh.agario.model.communicator.impl;
 
+import men.brakh.agario.model.communicator.Communicator;
 import men.brakh.agario.model.message.Message;
 
 import javax.websocket.EncodeException;
