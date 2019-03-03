@@ -25,6 +25,7 @@ public class GameEndpoint {
 
     @OnOpen
     public void onOpen(Session session, @PathParam("username") String username) {
+        logger.info("New connection: " +username);
         communicator = new SessionCommunicator(session);
         gameField.add(username, communicator);
     }

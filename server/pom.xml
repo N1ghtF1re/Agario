@@ -42,7 +42,7 @@
                         <contextPath>/agario</contextPath>
                     </webApp>
                     <httpConnector>
-                        <port>1337</port>
+                        <port>8080</port>
                     </httpConnector>
                 </configuration>
             </plugin>

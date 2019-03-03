@@ -59,7 +59,7 @@ public class Person {
 
         int sr= r1 + r2;
 
-        return d<=sr;
+        return d<=sr/2;
     }
 
     public void changeCenter(Point center) {
