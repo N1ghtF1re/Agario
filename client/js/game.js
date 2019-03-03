@@ -6,7 +6,6 @@ const DIR_UP = 2
 const DIR_DOWN = 3
 
 const SPEED = 5
-const DELAY = 70
 
 const VISIBLE_WIDTH = document.body.clientWidth
 const VISIBLE_HEIGHT = document.body.clientHeight
@@ -17,7 +16,7 @@ const FIELD_HEIGHT = 2000
 // VARS
 
 var username = prompt("Enter username")
-var socket = new WebSocket("ws://localhost:1337/agario/" + username);
+var socket = new WebSocket("ws://localhost:8080/agario/" + username);
 
 socket.onmessage = onMessage;
 socket.onclose = onClose;
@@ -33,6 +32,8 @@ var timer
 
 var persons = new PersonsList() // Список персонажей
 var my_person = null // Персонаж текущего пользователя
+
+let DELAY = 70;
 
 document.onkeydown = function(e) {
    switch (e.key) {
@@ -134,6 +135,7 @@ function onMessage(event) {
          break
       case "SIZE_CHANGING":
          persons.resize(person)
+         DELAY = 70 + my_person.size*0.1
          break
       default:
          console.log(message)

@@ -88,7 +88,7 @@ class PersonsList {
 
    drawLeaders(ctx) {
       ctx.fillStyle = "rgba(100,150,185,0.5)";
-      ctx.rect(FIELD_WIDTH - 400, 0, FIELD_WIDTH, 0+300)
+      ctx.rect(document.body.clientWidth - 400, 0, document.body.clientWidth, 0+300)
       ctx.fill()
 
       let leaders = []
@@ -108,13 +108,13 @@ class PersonsList {
       ctx.font = "20px Arial";
       ctx.textAlign = "center";
 
-      ctx.fillText("LEADERS: ", FIELD_WIDTH - 260, 40);
+      ctx.fillText("LEADERS: ", document.body.clientWidth - 260, 40);
 
       ctx.font = "15px Arial";
       this.persons.forEach(function(item, i) {
          if(item.username != "mob") {
             ctx.fillText(item.username + "[" + item.id + "] - " + item.size,
-                  FIELD_WIDTH - 260, 60 + 20*i);
+                  document.body.clientWidth - 260, 60 + 20*i);
          }
          if(i == 10) {
             return;
